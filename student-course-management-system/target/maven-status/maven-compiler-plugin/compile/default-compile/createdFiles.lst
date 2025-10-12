@@ -1,0 +1,10 @@
+DTO\Courses.class
+Interfaces\IStudentCRUD.class
+Interfaces\ICourseCRUD.class
+DTO\Enrollments.class
+CRUD\EnrollmentCRUD.class
+DTO\Students.class
+CRUD\CourseCRUD.class
+CRUD\StudentCRUD.class
+Drivers\SCMSMenu.class
+Interfaces\IEnrollmentCRUD.class
