@@ -1,0 +1,7 @@
+bank  otm  branches 	 
+
+branch  otm  loan offers 
+ 
+        
+Customer  mtm  loan/offers 
+          otm  accounts 

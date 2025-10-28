@@ -1,0 +1,18 @@
+1. Bank can be added alone, but to add Branch,
+existence of Bank is mandatory!!! 
+
+2. Customer and one Account is added together while adding Customer
+More accounts can be added for a particular Customer later 
+
+3. To add loan, existence of branch is mandatory!!! 
+
+4. Deleting branch will also delete all loans as well as customers!!
+
+5. Deleting bank will also delete all related :
+
+customers--accounts 
+and 
+branches-->loans
+ 
+ 6. Deleting customer will delete all related accounts,
+ but not loans!!!
