@@ -10,9 +10,8 @@ public interface AccountDAO {
 	void deleteAccount(long account_no);
 
 	void getAccount(long account_no);
-
-//	void getAllAccountsByBranch(int branch_id);
 	
 	void getAllAccountsByCustomer(int customer_id);
 
 }
+
