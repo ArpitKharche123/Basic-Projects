@@ -121,34 +121,7 @@ public class AccountService implements AccountDAO {
 			em.close();
 		}
 	}
-//
-//	@Override
-//	public void getAllAccountsByBranch(int branch_id) {
-//		EntityManager em = emf.createEntityManager();
-//		try {
-//			Branch branch = em.find(Branch.class, branch_id);
-//			if (branch != null) {
-//				List<Account> accounts = branch.getAccounts();
-//				if (accounts != null) {
-//					System.out.println("Accounts Details: ");
-//					for (Account account : accounts) {
-//						System.out.println(
-//								"Account No.: " + account.getAccNo() + "\nHolder Name: " + account.getHolderName()
-//										+ "\nType: " + account.getType() + " \nBalance: " + account.getBalance());
-//						System.out.println("---------------------------------------------------");
-//					}
-//				} else {
-//					System.err.println("No accounts found for the given branch!!");
-//				}
-//			} else {
-//				System.err.println("No branch found for the given id: " + branch_id);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			em.close();
-//		}
-//	}
+
 
 	@Override
 	public void getAllAccountsByCustomer(int customer_id) {
@@ -178,3 +151,4 @@ public class AccountService implements AccountDAO {
 		}
 	}
 }
+
