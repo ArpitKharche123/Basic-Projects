@@ -1,0 +1,117 @@
+How All the Pieces Work Together
+
+Here’s a summary of the application flow and how it meets all your requirements.
+
+1. Application Startup (Fulfilling load-on-startup)
+
+->When you start Tomcat, it loads your application.
+
+->Because EmployeeServlet has @WebServlet(loadOnStartup = 1), Tomcat immediately creates an instance of this servlet.
+
+->The servlet's init(ServletConfig config) method is called.
+
+Inside init():
+
+A thread-safe ConcurrentHashMap is created to store employees.
+
+This map is stored in the ServletContext (application-wide scope) under the name "employeeMap".
+
+The defaultDepartment ("General") is read from ServletConfig (using @WebInitParam).
+
+EmployeeServiceImpl is created and initialized, getting a reference to the shared employeeMap.
+
+2. The "Abstract Layer" and CRUD Logic
+
+EmployeeService (Interface): This is your abstract layer. It just defines what can be done (e.g., getEmployee, addEmployee).
+
+EmployeeServiceImpl (Class): This is the concrete implementation. It contains all the logic for modifying the employeeMap (generating IDs, adding, removing, updating).
+
+EmployeeServlet (Controller): The servlet delegates all business logic. It just receives the HTTP request, calls the appropriate method on employeeService (e.g., employeeService.deleteEmployee(id)), and then prepares the response.
+
+3. The Full CRUD Flow
+
+A. Home Page (index.jsp)
+
+You visit http://.../EmployeeManagementSystem/.
+
+Tomcat sees the <welcome-file>index.jsp</welcome-file> in web.xml and serves index.jsp.
+
+You see two links: "View All" and "Add New".
+
+B. Create Employee (Add)
+
+You click "Add New Employee" (.../employee?action=create).
+
+EmployeeServlet.doGet() is called. The action is "create".
+
+showNewForm() is executed. It forwards the request to employeeForm.jsp.
+
+employeeForm.jsp loads. Since ${empty employee} is true, it shows "Add New Employee". The department field is pre-filled with the ${defaultDepartment}.
+
+You fill out the form and click "Save". This makes a POST request to .../employee.
+
+EmployeeServlet.doPost() is called. Since id is empty, addEmployee() is executed.
+
+The servlet reads the form parameters (name, email, department).
+
+It calls employeeService.addEmployee(...), which updates the shared employeeMap.
+
+The servlet uses response.sendRedirect("employee?action=list"). This tells your browser to make a new GET request to the employee list page.
+
+C. Read Employees (Get All)
+
+Your browser (after the redirect) makes a GET request to .../employee?action=list.
+
+EmployeeServlet.doGet() is called. The action is "list".
+
+listEmployees() is executed.
+
+It calls employeeService.getAllEmployees() to get the data.
+
+It checks the HttpSession and Cookies for any update messages.
+
+It stores the list and messages in the request scope (e.g., request.setAttribute("employeeList", ...))
+
+It uses RequestDispatcher.forward() to send the request (and its data) to employeeList.jsp.
+
+employeeList.jsp uses JSTL <c:forEach> to loop through the list and build the HTML table.
+
+D. Update Employee (Edit)
+
+You click "Edit" on an employee (.../employee?action=edit&id=EMP1).
+
+EmployeeServlet.doGet() is called. The action is "edit".
+
+showEditForm() is executed.
+
+It calls employeeService.getEmployee("EMP1") to get the employee's data.
+
+It stores this Employee object in the request (request.setAttribute("employee", ...))
+
+It uses RequestDispatcher.forward() to send the request to employeeForm.jsp.
+
+employeeForm.jsp loads. Since ${empty employee} is false, it shows "Edit Employee". The fields are pre-filled with ${employee.name}, ${employee.email}, etc. A hidden field <input type="hidden" name="id" ...> is also included.
+
+You change the name and click "Save". This makes a POST request to .../employee.
+
+EmployeeServlet.doPost() is called. Since id ("EMP1") is not empty, updateEmployee() is executed.
+
+The servlet reads all form parameters.
+
+It calls employeeService.updateEmployee(...).
+
+(Session/Cookie Requirement): The servlet gets the HttpSession and stores the id ("EMP1") in it. It creates a new Cookie with the name and adds it to the response.
+
+It uses response.sendRedirect("employee?action=list") to send you back to the list.
+
+E. Delete Employee
+
+You click "Delete" (.../employee?action=delete&id=EMP1). (Note: The JavaScript confirmDelete function just redirects to this URL if you click "OK").
+
+EmployeeServlet.doGet() is called. The action is "delete".
+
+deleteEmployee() is executed.
+
+It calls employeeService.deleteEmployee("EMP1").
+
+It uses response.sendRedirect("employee?action=list") to refresh the list page.
