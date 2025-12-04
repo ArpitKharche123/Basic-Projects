@@ -1,0 +1,6 @@
+Order to payment connection
+
+retrieve payment associated with the order 
+check payment belongs to logged in user
+
+if yes: for that payment, change status to refunded!
